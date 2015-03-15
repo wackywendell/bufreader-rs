@@ -1,22 +1,26 @@
 #![feature(io)]
 
 use std::io::BufReadExt;
+use std::process::{Command,Stdio};
+use std::sync::mpsc::sync_channel;
+use std::thread;
 
 fn main() {
     let stdin = std::io::stdin();
     let stdin_buf = stdin.lock();
     
-    for line_result in stdin_buf.lines() {
+    let comm = Command::new("sh")
+        .arg("-c")
+        .arg("for i in $(seq 1 3); do sleep 1; echo line $i; done")
+        .stdout(Stdio::piped())
+        .spawn().unwrap();
+    
+    let child_buf = std::io::BufReader::new(comm.stdout.unwrap());
+    
+    for line_result in child_buf.lines() {
         match line_result {
             Ok(line) => println!("Read line {}", line),
-            _ => break
+            Err(e) => {println!("Error: {}", e); break;}
         }
     }
-    
-    // loop {
-    //     match stdin_buf.read_line() {
-    //         Ok(line) => println!("Read line {}", line),
-    //         _ => break
-    //     }
-    // }
 }
