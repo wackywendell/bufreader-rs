@@ -1,0 +1,5 @@
+[package]
+
+name = "bufreader"
+version = "0.0.1"
+authors = ["Wendell Smith <wendellwsmith@gmail.com>"]
