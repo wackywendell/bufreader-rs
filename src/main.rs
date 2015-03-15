@@ -1,5 +1,20 @@
 #![feature(io)]
 
+/**
+A basic example of using a Buffered reader on both stdin and a child, and returning whatever happens first.
+
+```bash
+for i in $(seq 10 10 30); do echo $i; sleep 2; done | cargo run --release
+    [... Compiling ...]
+STDIN: 10
+CHILD: line 1
+STDIN: 20
+CHILD: line 2
+CHILD: line 3
+STDIN: 30
+```
+*/
+
 use std::io::BufReadExt;
 use std::process::{Command,Stdio};
 use std::sync::mpsc::sync_channel;
